@@ -1,0 +1,66 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+
+{% block content_title %}
+    <div style="display: none !important;">
+        {{ block.super }}
+    </div>
+{% endblock %}
+
+{% block object-tools %}
+    <div style="width: 100%; display: flex; flex-direction: column; gap: 20px; font-family: 'Segoe UI', Roboto, sans-serif; box-sizing: border-box; margin-bottom: 25px;">
+        
+        <!-- Header Banner -->
+        <div style="background: linear-gradient(135deg, #002060 0%, #003399 100%); color: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,32,96,0.15); width: 100%; box-sizing: border-box;">
+            <h1 style="margin: 0; font-size: 26px; font-weight: 700; color: white; letter-spacing: 0.5px;">
+                🏢 Direktori Pengurusan Profil Anggota Polis Bantuan UM
+            </h1>
+            <p style="margin: 6px 0 0 0; font-size: 13.5px; color: #cbd5e1; font-style: italic;">
+                University of Malaya Auxiliary Police Officer Profile Directory Hub (Dwi-Bahasa Platform)
+            </p>
+        </div>
+
+        <!-- KPI Cards Grid Layout -->
+        <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap; box-sizing: border-box;">
+            <div style="flex: 1; min-width: 250px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(2,132,199,0.12); box-sizing: border-box;">
+                <div style="font-size: 11px; text-transform: uppercase; font-weight: bold; opacity: 0.85; letter-spacing: 0.5px;">👥 Jumlah Anggota / Total Officers</div>
+                <div style="font-size: 28px; font-weight: bold; margin-top: 5px;">{{ cl.result_count|default:"0" }} <span style="font-size: 14px; font-weight: normal; opacity: 0.9;">Anggota / Officers</span></div>
+            </div>
+            <div style="flex: 1; min-width: 250px; background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(22,163,74,0.12); box-sizing: border-box;">
+                <div style="font-size: 11px; text-transform: uppercase; font-weight: bold; opacity: 0.85; letter-spacing: 0.5px;">🔄 Struktur Tugasan / Deployment</div>
+                <div style="font-size: 15px; font-weight: bold; margin-top: 8px; line-height: 1.4;">Syif Pusingan (Rotation Pattern) &<br>Syif Statik & Office Hours</div>
+            </div>
+            <div style="flex: 1; min-width: 250px; background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(234,88,12,0.12); box-sizing: border-box;">
+                <div style="font-size: 11px; text-transform: uppercase; font-weight: bold; opacity: 0.85; letter-spacing: 0.5px;">📍 Jumlah Penempatan / Checkpoints</div>
+                <div style="font-size: 28px; font-weight: bold; margin-top: 5px;">27 <span style="font-size: 14px; font-weight: normal; opacity: 0.9;">Pos Kawalan Utama</span></div>
+            </div>
+        </div>
+
+        <!-- Action Control Panel Buttons Layout -->
+        <div style="width: 100%; background-color: #f8fafc; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; box-sizing: border-box;">
+            <div style="font-size: 13.5px; color: #334155; font-weight: 600;">
+                🛠️ Urus Pergerakan Tugas / Open Core Ingestion Portal Platform:
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <!-- 🎯 Both buttons are now mapped directly to the active relative path link safely -->
+                <a href="manage-roster/" style="background: linear-gradient(135deg, #002060 0%, #003399 100%); color: white; font-weight: bold; padding: 10px 20px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,32,96,0.2); text-decoration: none; font-size: 12.5px; display: inline-block; border: 0;">
+                    🚀 BUKA PORTAL PENGURUSAN ROSTER PBUM (DWI-BAHASA)
+                </a>
+                <a href="manage-roster/" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; font-weight: bold; padding: 10px 20px; border-radius: 6px; box-shadow: 0 4px 10px rgba(2,132,199,0.2); text-decoration: none; font-size: 12.5px; display: inline-block; border: 0;">
+                    📥 Import & Auto-Fill Excel
+                </a>
+            </div>
+        </div>
+        
+    </div>
+
+    <div style="display: none !important;">
+        {{ block.super }}
+    </div>
+{% endblock %}
+
+{% block result_list %}
+    <div style="box-shadow: 0 4px 20px rgba(0,0,0,0.03); border-radius: 8px; overflow: hidden; border: 1px solid #edf2f7; width: 100%; margin-top: 10px; box-sizing: border-box;">
+        {{ block.super }}
+    </div>
+{% endblock %}

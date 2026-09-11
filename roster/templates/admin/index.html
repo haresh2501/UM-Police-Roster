@@ -1,0 +1,40 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block sidebar %}
+    <!-- 📊 BLOK MULTI-FORMAT ENJIN LAPORAN (KEMAS, JITU & BERFUNGSI 100%) -->
+    <div class="module" style="margin-top: 0px; padding: 20px; background: #ffffff; border: 0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 32, 96, 0.08); border: 1px solid #eef2f7;">
+        
+        <!-- Pengepala Kotak Menu (UM Corporate Navy Gradient) -->
+        <h2 style="background: linear-gradient(135deg, #002060 0%, #003399 100%); color: #ffffff; margin: -20px -20px 18px -20px; padding: 12px 18px; font-size: 14px; border-radius: 12px 12px 0 0; font-weight: bold; display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px;">
+            📊 Enjin Laporan Bersepadu
+        </h2>
+        
+        <p style="font-size: 12.5px; color: #4a5568; margin-bottom: 18px; line-height: 1.5; font-family: 'Segoe UI', Roboto, sans-serif;">
+            Sila pilih format dokumen di bawah untuk menjana fail laporan master roster bulanan keanggotaan Polis Bantuan UM dengan serta-merta:
+        </p>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px; font-family: 'Segoe UI', Roboto, sans-serif;">
+            
+            <!-- 🟢 Butang 1: Eksport ke Excel Spreadsheet Moden (MENGGUNAKAN LALUAN MUTLAK GLOBAL) -->
+            <a href="/admin/export-master-excel/" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #1fa347 0%, #167e35 100%); color: #ffffff; font-weight: bold; padding: 12px; border-radius: 8px; text-decoration: none; font-size: 12.5px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(31, 163, 71, 0.25);"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 15px rgba(31, 163, 71, 0.35)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(31, 163, 71, 0.25)';">
+                <span>🚀</span> Eksport ke Excel Spreadsheet (.xlsx)
+            </a>
+            
+            <!-- 🔴 Butang 2: Cetak Laporan PDF (MENGGUNAKAN LALUAN MUTLAK GLOBAL) -->
+            <a href="/admin/print-master-pdf/" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #e53e3e 0%, #b7791f 100%); color: #ffffff; font-weight: bold; padding: 12px; border-radius: 8px; text-decoration: none; font-size: 12.5px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(229, 62, 62, 0.25);"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 15px rgba(229, 62, 62, 0.35)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(229, 62, 62, 0.25)';">
+                <span>🖨️</span> Cetak Laporan PDF / Print
+            </a>
+            
+        </div>
+        
+        <!-- Garis Penghias Kecil (Footer Card) -->
+        <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #edf2f7; text-align: center; font-size: 10.5px; color: #a0aec0; font-style: italic;">
+            Hab Automasi Roster Security PBUM
+        </div>
+    </div>
+{% endblock %}

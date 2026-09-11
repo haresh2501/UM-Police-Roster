@@ -1,0 +1,209 @@
+﻿{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<style>
+    .pbum-container { max-width: 1200px; font-family: 'Segoe UI', Roboto, sans-serif; background-color: #fdfdfd; padding: 20px; margin: 0 auto; }
+    .pbum-banner { background: linear-gradient(135deg, #002060 0%, #003399 100%); color: white; padding: 25px 20px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .pbum-alert { padding: 12px; margin-bottom: 10px; border-radius: 6px; color: white; font-weight: bold; background-color: #002060; }
+    .pbum-layout-grid { display: flex; gap: 25px; margin-bottom: 30px; flex-wrap: wrap; }
+    .pbum-card-upload { flex: 1; min-width: 350px; background-color: white; padding: 20px; border: 1px solid #eef2f7; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    .pbum-card-verify { flex: 1.2; min-width: 350px; background-color: white; padding: 20px; border: 1px solid #eef2f7; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    .pbum-main-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; text-align: left; }
+    .pbum-main-table th { padding: 12px; font-weight: bold; }
+    .pbum-main-table td { padding: 12px; vertical-align: middle; }
+
+    .shift-pill {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 700;
+        color: white;
+        min-width: 74px;
+        text-align: center;
+    }
+    .shift-night { background: #111827; }
+    .shift-morning { background: #facc15; color: #111827; }
+    .shift-afternoon { background: #22c55e; }
+    .shift-leave { background: #9ca3af; }
+    .shift-off { background: #d1d5db; color: #111827; }
+
+    /* Animation untuk Butang Jana Roster Baharu */
+    @keyframes pulse-glow {
+        0% { transform: scale(1); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4); }
+        50% { transform: scale(1.02); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.7); }
+        100% { transform: scale(1); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4); }
+    }
+    .btn-generate-roster {
+        width: 100%; 
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+        color: white; 
+        padding: 14px; 
+        font-weight: bold; 
+        font-size: 14px;
+        text-align: center;
+        cursor: pointer; 
+        border: 0; 
+        border-radius: 6px; 
+        margin-top: 15px;
+        display: block;
+        text-decoration: none;
+        animation: pulse-glow 2s infinite ease-in-out;
+        transition: all 0.3s ease;
+    }
+    .btn-generate-roster:hover {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="pbum-container">
+    <div class="pbum-banner">
+        <h2 style="margin: 0; font-size: 26px; font-weight: 700;">Portal Pengurusan Roster Polis Bantuan Universiti Malaya / UM Roster Portal</h2>
+    </div>
+
+    <!-- Pengecam Mesej Kejayaan daripada Backend -->
+    {% if messages %}
+        <div style="margin-bottom: 20px;">
+            {% for message in messages %}
+                <div class="pbum-alert">[{{ message.tags | upper }}] {{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="pbum-layout-grid">
+        <!-- Borang Import Excel -->
+        <div class="pbum-card-upload">
+            <h3 style="margin-top: 0; color: #002060; border-bottom: 2px solid #002060; padding-bottom: 8px;">📥 Muat Naik Fail & Auto-Fill Fail Excel</h3>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div style="margin-bottom: 15px; padding: 10px; background-color: #f8fafc; border-radius: 6px; border: 1px dashed #cbd5e1;">
+                    <input type="file" name="excel_file" accept=".xlsx, .xls" style="width: 100%;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <div style="flex: 1;">
+                        <label style="font-weight: bold; font-size: 12px; display: block; margin-bottom: 4px;">Pilihan Tahun:</label>
+                        <input type="number" name="year" value="2026" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-weight: bold; font-size: 12px; display: block; margin-bottom: 4px;">Pilihan Bulan:</label>
+                        <select name="month" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                            <option value="9" selected>September</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="submit" name="upload_excel" value="📥 1. Muat Naik & Import Excel" style="width: 100%; background: #002060; color: white; padding: 12px; font-weight: bold; cursor: pointer; border: 0; border-radius: 6px; margin-bottom: 12px;">
+                <button type="submit" name="generate_roster" value="1" class="btn-generate-roster">
+                    ⚙️ 2. Jana Roster / Generate Roster
+                </button>
+            </form>
+        </div>
+
+        <!-- Semakan Jadual Anggota -->
+        <div class="pbum-card-verify">
+            <h3 style="margin-top: 0; color: #806000; border-bottom: 2px solid #806000; padding-bottom: 8px;">🔍 Pilih Nama Pegawai / Select Officer Name</h3>
+            <form method="GET" action="">
+                <label style="display: block; font-weight: bold; font-size: 12px; margin-bottom: 6px; color: #334155;">Nama pegawai / Staff name:</label>
+                <select name="officer_select" onchange="this.form.submit()" style="width: 100%; padding: 10px; font-size: 13.5px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff;">
+                    <option value="">-- Pilih nama pegawai untuk melihat roster --</option>
+                    {% for officer in all_officers %}
+                        <option value="{{ officer.id }}" {% if selected_officer and selected_officer.id == officer.id %}selected{% endif %}>👮 {{ officer.name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+
+            {% if selected_officer %}
+            <div style="margin-top: 18px; padding: 12px; background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border: 1px solid #bfdbfe; border-radius: 8px; box-shadow: 0 2px 8px rgba(14, 116, 144, 0.08);">
+                <div style="font-weight: 800; color: #0f172a; margin-bottom: 8px; font-size: 16px;">ROSTER FOR: {{ selected_officer.name }}</div>
+                <div style="font-size: 12px; color: #475569;">Placement: {{ selected_officer.placement }} | Shift Type: {{ selected_officer.shift_type }}</div>
+            </div>
+
+            <form method="POST" action="" style="margin-top: 18px;">
+                {% csrf_token %}
+                <input type="hidden" name="officer_id" value="{{ selected_officer.id }}">
+                <label style="display: block; font-weight: bold; font-size: 12px; margin-bottom: 6px; color: #334155;">Kedudukan / Placement (manual):</label>
+                <select name="placement" style="width: 100%; padding: 10px; font-size: 13.5px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 10px;">
+                    {% for pos in placement_options %}
+                        <option value="{{ pos }}" {% if selected_officer.placement == pos or selected_officer.staff_group == pos %}selected{% endif %}>{{ pos }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" name="save_placement" value="1" style="width: 100%; background: #0f766e; color: white; padding: 10px; border: 0; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                    💾 Simpan Kedudukan
+                </button>
+            </form>
+
+            <form method="POST" action="" style="margin-top: 18px;">
+                {% csrf_token %}
+                <input type="hidden" name="shift_setting_officer_id" value="{{ selected_officer.id }}">
+                <label style="display: block; font-weight: bold; font-size: 12px; margin-bottom: 6px; color: #334155;">Auto-generated Shift Setting:</label>
+                <select name="shift_setting" style="width: 100%; padding: 10px; font-size: 13.5px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 10px;">
+                    <option value="ROT" {% if selected_officer.shift_type == 'ROT' %}selected{% endif %}>ROT - Normal Rotation</option>
+                    <option value="MORNING" {% if selected_officer.shift_type == 'MORNING' %}selected{% endif %}>MORNING - Morning Only</option>
+                    <option value="AFTERNOON" {% if selected_officer.shift_type == 'AFTERNOON' %}selected{% endif %}>AFTERNOON - Afternoon Only</option>
+                </select>
+                <button type="submit" name="save_shift_setting" value="1" style="width: 100%; background: #1d4ed8; color: white; padding: 10px; border: 0; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                    ⚙️ Apply Auto Shift Setting
+                </button>
+            </form>
+
+            <form method="POST" action="" style="margin-top: 18px;">
+                {% csrf_token %}
+                <input type="hidden" name="manual_officer_id" value="{{ selected_officer.id }}">
+                <label style="display: block; font-weight: bold; font-size: 12px; margin-bottom: 6px; color: #334155;">Manual Shift Override:</label>
+                <input type="date" name="manual_roster_date" value="{{ target_date|date:'Y-m-d' }}" style="width: 100%; padding: 10px; font-size: 13.5px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 10px;">
+                <select name="manual_shift_code" style="width: 100%; padding: 10px; font-size: 13.5px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 10px;">
+                    <option value="2" selected>2 - Morning</option>
+                    <option value="3">3 - Afternoon</option>
+                    <option value="1">1 - Night</option>
+                    <option value="X">X - Off</option>
+                    <option value="EL">EL - Emergency Leave</option>
+                    <option value="MC">MC - Medical Leave</option>
+                    <option value="AL">AL - Annual Leave</option>
+                    <option value="CUTI">CUTI - General Leave</option>
+                </select>
+                <button type="submit" name="save_manual_shift" value="1" style="width: 100%; background: #b45309; color: white; padding: 10px; border: 0; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                    🛠️ Save Manual Shift
+                </button>
+            </form>
+
+            {% if personal_roster %}
+            <div style="margin-top: 22px;">
+                <h4 style="margin-bottom: 10px; color: #0f172a;">Auto-generated shift for {{ selected_officer.name }}</h4>
+                <table class="pbum-main-table" style="font-size: 12px;">
+                    <thead>
+                        <tr style="background-color: #1e293b; color: white;">
+                            <th style="width: 20%;">Date</th>
+                            <th style="width: 15%;">Shift</th>
+                            <th style="width: 65%;">Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in personal_roster %}
+                        <tr style="border-bottom: 1px solid #edf2f7;">
+                            <td>{{ row.date }}</td>
+                            <td>
+                                {% if row.roster_type == '1' %}
+                                    <span class="shift-pill shift-night">Night</span>
+                                {% elif row.roster_type == '2' %}
+                                    <span class="shift-pill shift-morning">Morning</span>
+                                {% elif row.roster_type == '3' %}
+                                    <span class="shift-pill shift-afternoon">Afternoon</span>
+                                {% elif row.roster_type == 'X' %}
+                                    <span class="shift-pill shift-off">Off</span>
+                                {% else %}
+                                    <span class="shift-pill shift-leave">{{ row.roster_type }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ row.notes }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
